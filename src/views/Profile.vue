@@ -1,10 +1,32 @@
 <template>
-  <h1>Profile</h1>
-  <nav>
-    <router-link to="/feed">Feed</router-link> |
-    <router-link to="/profile">Profile</router-link> |
-    <router-link to @click="logout()">Logout</router-link>
-  </nav>
+  <header
+    class="
+      fixed
+      flex flex-col
+      md:flex-row
+      content-center
+      justify-between
+      items-center
+      bg-white
+      w-full
+      shadow-xl
+    "
+  >
+    <img
+      src="../assets/icon-left-font.png"
+      alt=""
+      class="w-80 h-24 object-cover"
+    />
+    <h1 class="text-5xl font-bold">Profile</h1>
+    <nav class="md:mr-10">
+      <router-link to="/feed">Feed</router-link> |
+      <router-link to="/profile">Profile</router-link> |
+      <router-link to="/" @click="logout()">Logout</router-link>
+    </nav>
+    <router-view />
+  </header>
+  <div class="md:h-32 h-48"></div>
+
   <input type="text" v-model="firstname" />
   <input type="text" v-model="lastname" />
   <input type="text" v-model="email" />
@@ -23,7 +45,7 @@ export default {
       this.$router.push("/");
       return;
     }
-    await this.$store.dispatch("getUserInfos")
+    await this.$store.dispatch("getUserInfos");
     this.firstname = this.$store.state.userInfos.firstname;
     this.lastname = this.$store.state.userInfos.lastname;
     this.email = this.$store.state.userInfos.email;
@@ -34,14 +56,13 @@ export default {
     //   return;
     // }
     // this.$store.dispatch("getUserInfos");
-    
   },
-  data (){
+  data() {
     return {
-      firstname: this.$store.state.userInfos.firstname ?? '',
-      lastname:'',
-      email:'',
-    }
+      firstname: this.$store.state.userInfos.firstname ?? "",
+      lastname: "",
+      email: "",
+    };
   },
   computed: {
     ...mapState({
