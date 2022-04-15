@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Profile from '@/views/Profile.vue';
 import Feed from '@/views/Feed.vue';
+import Post from '@/views/PagePost.vue';
 
 
 const routes = [
@@ -17,6 +18,11 @@ const routes = [
         name: 'Feed',
         path: '/feed',
         component: Feed,
+    }, {
+        name: 'Post',
+        path: '/Post/:postId',
+        component: Post,
+        props: true,
     }
 ];
 

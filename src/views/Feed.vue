@@ -29,7 +29,7 @@
   <div class="md:h-32 h-48"></div>
 
   <div class="flex justify-center content-between">
-    <div class="w-3/5 bg-white rounded-xl shadow-xl my-2 p-5">
+    <div class="md:w-3/5 w-full mx-5 bg-white rounded-xl shadow-xl my-2 p-5">
       <div class="flex flex-col">
         <input
           type="text"
@@ -113,33 +113,41 @@
       class="
         bg-white
         my-2
-        w-3/5
         rounded-xl
         shadow-xl
         justify-between
         flex
         overflow-hidden
+        md:w-3/5
+        w-full
+        mx-5
       "
     >
       <div class="w-1/2">
-        <button
+        <i
+          @click="showPost(post.id)"
+          class="cursor-pointer fas fa-comments"
+        ></i>
+        {{ post.nbComments }}
+        <i
+          v-if="!post.liked"
+          @click="like(post.id)"
+          class="cursor-pointer fas fa-heart"
+        ></i>
+        <i
+          v-if="post.liked"
+          @click="dislike(post.id)"
+          class="text-red-500 cursor-pointer fas fa-heart"
+        ></i>
+        {{ post.nbLikes }}
+        <i
           v-if="post.userId == userId"
-          class="
-            py-2
-            px-3
-            bg-red-500
-            text-white
-            hover:bg-red-600
-            rounded-xl
-            mt-2
-            w-24
-            shadow
-          "
-        >
-          Supprimer
-        </button>
+          class="text-red-500 hover:text-red-600 fas fa-ban cursor-pointer"
+          @click="deletePost(post.id)"
+        ></i>
         <h1 class="font-bold">{{ post.title }}</h1>
         <p>{{ post.description }}</p>
+        <p>{{ post.firstname }} {{ post.lastname }}</p>
       </div>
       <img
         v-if="post.imageUrl"
@@ -159,18 +167,30 @@ export default {
     return {
       file: "",
       imagePreview: null,
-      posts: this.$store.state.posts,
+      posts: {},
       userId: 0,
+      post: "",
+      title: "",
     };
   },
-  beforeMount: function () {
+
+  mounted: function () {
+    const self = this;
     this.$store.dispatch("getUserInfos");
-    this.$store.dispatch("getAllPosts");
+    this.$store.dispatch("getAllPosts").then(
+      function (response) {
+        console.log(response);
+        self.posts = self.$store.state.posts;
+      },
+      function (error) {
+        console.log(error);
+      }
+    );
+
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");
       return;
     }
-    this.post = "";
     this.userId = this.$store.state.user.userId;
   },
   methods: {
@@ -180,16 +200,92 @@ export default {
     },
     createPost: function () {
       let formData = new FormData();
+      const self = this;
       formData.append("image", this.file);
       formData.append("title", this.title);
       formData.append("description", this.post);
       formData.append("userId", this.$store.state.user.userId);
-      this.$store.dispatch("createPost", formData);
-      console.log(formData);
+      this.$store.dispatch("createPost", formData).then(
+        function (response) {
+          console.log(response.data);
+          self.$router.go();
+        },
+        function (error) {
+          console.log(error);
+          self.$router.push("/");
+        }
+      );
     },
     handleFileUpload(event) {
       this.file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(this.file);
+    },
+    showPost(key) {
+      const self = this;
+      this.$store.dispatch("getOnePost", key).then(
+        function (response) {
+          console.log(response);
+          self.$router.push("/post/" + key);
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+    },
+    deletePost(id) {
+      const self = this;
+      this.$store
+        .dispatch("deletePost", {
+          userId: this.userId,
+          id: id,
+        })
+
+        .then(
+          function (response) {
+            console.log(response);
+            self.$router.go();
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+    like(id) {
+      const self = this;
+      this.$store
+        .dispatch("likePost", {
+          userId: this.userId,
+          postId: id,
+        })
+
+        .then(
+          function (response) {
+            console.log(response);
+            self.$router.go();
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
+    },
+    dislike(id) {
+      console.log(id);
+      const self = this;
+      this.$store
+        .dispatch("dislikePost", {
+          userId: this.userId,
+          postId: id,
+        })
+
+        .then(
+          function (response) {
+            console.log(response);
+            self.$router.go();
+          },
+          function (error) {
+            console.log(error);
+          }
+        );
     },
   },
 };
