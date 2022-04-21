@@ -103,7 +103,6 @@ const store = createStore({
           .get("users/me")
           .then(function (response) {
             commit("userInfos", response.data);
-            console.log(response.data);
             resolve(response);
           })
           .catch(function (error) {
@@ -116,7 +115,6 @@ const store = createStore({
       instance
         .delete("users/me")
         .then(function (response) {
-          console.log(response.data);
           commit("userInfos", response.data);
         })
         .catch(function (error) {
@@ -124,11 +122,10 @@ const store = createStore({
         });
     },
     updateUser: ({ commit }, data) => {
-      console.log(data);
       instance
         .put("users/me", data)
-        .then(function (response) {
-          console.log(response.data);
+        .then(function () {
+          
         })
         .catch(function (error) {
           console.log(error);
@@ -154,7 +151,6 @@ const store = createStore({
           .get("posts", { params: { userId: 60 } })
           .then(function (response) {
             commit("posts", response.data);
-            console.log(response.data);
             resolve(response);
           })
           .catch(function (error) {
@@ -170,7 +166,6 @@ const store = createStore({
           .get("posts/" + key)
           .then(function (response) {
             commit("post", response.data);
-            console.log(response.data);
             resolve(response);
           })
           .catch(function (error) {
@@ -200,7 +195,6 @@ const store = createStore({
         instance
           .delete("posts/comment", { data: data })
           .then(function (response) {
-            console.log(response);
             resolve(response);
           })
           .catch(function (error) {
@@ -214,7 +208,6 @@ const store = createStore({
         instance
           .delete("posts", { data: data })
           .then(function (response) {
-            console.log(response);
             resolve(response);
           })
           .catch(function (error) {
@@ -242,7 +235,6 @@ const store = createStore({
           instance
             .delete("posts/like", { data: data })
             .then(function (response) {
-              console.log(response);
               resolve(response);
             })
             .catch(function (error) {

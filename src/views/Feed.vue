@@ -75,6 +75,8 @@
 
         <div class="flex items-center justify-center">
           <button
+            :disabled="!validatedFields"
+            :class="{ 'cursor-not-allowed': !validatedFields }"
             @click="createPost()"
             class="
               mt-3
@@ -141,7 +143,7 @@
         ></i>
         {{ post.nbLikes }}
         <i
-          v-if="post.userId == userId"
+          v-if="post.userId == userId || admin"
           class="text-red-500 hover:text-red-600 fas fa-ban cursor-pointer"
           @click="deletePost(post.id)"
         ></i>
@@ -171,26 +173,40 @@ export default {
       userId: 0,
       post: "",
       title: "",
+      admin: false,
     };
   },
-
+  computed: {
+    validatedFields: function () {
+      if (this.post != "" && this.title != "") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
   mounted: function () {
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push("/");
+      return;
+    }
     const self = this;
-    this.$store.dispatch("getUserInfos");
+    this.$store.dispatch("getUserInfos").then(
+      function () {
+        self.admin = self.$store.state.userInfos.admin;
+      },
+      function (error) {
+        console.log(error);
+      }
+    );
     this.$store.dispatch("getAllPosts").then(
-      function (response) {
-        console.log(response);
+      function () {
         self.posts = self.$store.state.posts;
       },
       function (error) {
         console.log(error);
       }
     );
-
-    if (this.$store.state.user.userId == -1) {
-      this.$router.push("/");
-      return;
-    }
     this.userId = this.$store.state.user.userId;
   },
   methods: {
@@ -207,8 +223,16 @@ export default {
       formData.append("userId", this.$store.state.user.userId);
       this.$store.dispatch("createPost", formData).then(
         function (response) {
-          console.log(response.data);
-          self.$router.go();
+          response.data.result.nbLikes = 0;
+          response.data.result.nbComments = 0;
+          response.data.result.firstname =
+            self.$store.state.userInfos.firstname;
+          response.data.result.lastname = self.$store.state.userInfos.lastname;
+          self.posts.unshift(response.data.result);
+          self.title = "";
+          self.post = "";
+          self.imagePreview = "";
+          self.file = null;
         },
         function (error) {
           console.log(error);
@@ -216,6 +240,7 @@ export default {
         }
       );
     },
+
     handleFileUpload(event) {
       this.file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(this.file);
@@ -223,8 +248,7 @@ export default {
     showPost(key) {
       const self = this;
       this.$store.dispatch("getOnePost", key).then(
-        function (response) {
-          console.log(response);
+        function () {
           self.$router.push("/post/" + key);
         },
         function (error) {
@@ -239,11 +263,15 @@ export default {
           userId: this.userId,
           id: id,
         })
-
         .then(
-          function (response) {
-            console.log(response);
-            self.$router.go();
+          function () {
+            const posts = self.posts;
+            for (var i in posts) {
+              if (posts[i].id == id) {
+                posts.splice(i, 1);
+              }
+            }
+            // self.$router.go();
           },
           function (error) {
             console.log(error);
@@ -259,9 +287,14 @@ export default {
         })
 
         .then(
-          function (response) {
-            console.log(response);
-            self.$router.go();
+          function () {
+            const posts = self.posts;
+            for (var i in posts) {
+              if (posts[i].id == id) {
+                posts[i].liked = 1;
+                posts[i].nbLikes += 1;
+              }
+            }
           },
           function (error) {
             console.log(error);
@@ -269,7 +302,6 @@ export default {
         );
     },
     dislike(id) {
-      console.log(id);
       const self = this;
       this.$store
         .dispatch("dislikePost", {
@@ -278,9 +310,14 @@ export default {
         })
 
         .then(
-          function (response) {
-            console.log(response);
-            self.$router.go();
+          function () {
+            const posts = self.posts;
+            for (var i in posts) {
+              if (posts[i].id == id) {
+                posts[i].liked = null;
+                posts[i].nbLikes -= 1;
+              }
+            }
           },
           function (error) {
             console.log(error);

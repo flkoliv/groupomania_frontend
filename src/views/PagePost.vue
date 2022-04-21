@@ -75,6 +75,8 @@
           w-52
         "
         @click="createComment()"
+        :disabled="!validatedFields"
+        :class="{ 'cursor-not-allowed': !validatedFields }"
       >
         Nouveau commentaire
       </button>
@@ -88,7 +90,7 @@
       <p>{{ comment.comment }}</p>
       <p>Auteur : {{ comment.user.firstname }} {{ comment.user.lastname }}</p>
       <i
-        v-if="comment.userId == userId"
+        v-if="comment.userId == userId || user.admin"
         @click="deleteComment(comment.id)"
         class="cursor-pointer fas fa-ban"
       ></i>
@@ -105,14 +107,27 @@ export default {
       post: this.$store.state.post,
       userId: 0,
       comment: "",
+      user: this.$store.state.userInfos,
     };
   },
+
+  computed: {
+    validatedFields: function () {
+      if (this.comment != "") {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+
   beforeMount: function () {
     const postId = this.$route.params.postId;
     if (postId == "") {
       this.$router.push("/");
     }
     const self = this;
+    this.$store.dispatch("getUserInfos");
     this.$store.dispatch("getOnePost", postId).then(
       function (response) {
         console.log(response.data);
@@ -132,6 +147,7 @@ export default {
     },
     createComment: function () {
       const self = this;
+
       this.$store
         .dispatch("createComment", {
           comment: this.comment,
@@ -140,8 +156,19 @@ export default {
         })
         .then(
           function (response) {
-            console.log(response.data);
-            self.$router.go();
+            console.log(response.data.result.id);
+            console.log(self.$store.state.userInfos);
+            self.post.comments.push({
+              id: response.data.result.id,
+              comment: self.comment,
+              userId: self.userId,
+              postId: self.post.id,
+              user: {
+                firstname: self.$store.state.userInfos.firstname,
+                lastname: self.$store.state.userInfos.lastname,
+              },
+            });
+            self.comment = "";
           },
           function (error) {
             console.log(error);
@@ -159,9 +186,13 @@ export default {
           id: id,
         })
         .then(
-          function (response) {
-            console.log(response.data);
-            self.$router.go();
+          function () {
+            const comments = self.post.comments;
+            for (var i in comments) {
+              if (comments[i].id == id) {
+                comments.splice(i, 1);
+              }
+            }
           },
           function (error) {
             console.log(error);
