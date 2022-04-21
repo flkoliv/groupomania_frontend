@@ -123,6 +123,10 @@ export default {
 
   beforeMount: function () {
     const postId = this.$route.params.postId;
+    if (this.$store.state.user.userId == -1) {
+      this.$router.push("/");
+      return;
+    }
     if (postId == "") {
       this.$router.push("/");
     }
