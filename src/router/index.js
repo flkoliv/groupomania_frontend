@@ -33,16 +33,6 @@ const router = createRouter({
   routes,
 });
 
-let isAuthenticated = true;
-let user = localStorage.getItem("user");
-if (user == null) {
-  isAuthenticated = false;
-} else {
-  isAuthenticated = true;
-}
-
-console.log(isAuthenticated);
-
 router.beforeEach(async (to, from) => {
   let user = localStorage.getItem("user");
   if (user == null && to.name !== "Home") {
