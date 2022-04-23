@@ -1,3 +1,4 @@
+/* eslint-disable vue/multi-word-component-names */
 <template>
   <header
     class="
@@ -164,7 +165,7 @@
 
 <script>
 export default {
-  name: "Feed",
+  name: "FeedPage",
   data() {
     return {
       file: "",
@@ -236,7 +237,11 @@ export default {
         },
         function (error) {
           console.log(error);
-          self.$router.push("/");
+          self.title = "";
+          self.post = "";
+          self.imagePreview = "";
+          self.file = null;
+          // self.$router.push("/");
         }
       );
     },

@@ -101,7 +101,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "Profile",
+  name: "ProfilePage",
   beforeMount: function () {
     if (this.$store.state.user.userId == -1) {
       this.$router.push("/");

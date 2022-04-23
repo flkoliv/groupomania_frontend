@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
 import Profile from "@/views/Profile.vue";
-import Feed from "@/views/Feed.vue";
+import Feed from "@/views/FeedPage.vue";
 import Post from "@/views/PagePost.vue";
 
 const routes = [
@@ -16,7 +16,7 @@ const routes = [
     component: Profile,
   },
   {
-    name: "Feed",
+    name: "FeedPage",
     path: "/feed",
     component: Feed,
   },
@@ -33,7 +33,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   let user = localStorage.getItem("user");
   if (user == null && to.name !== "Home") {
     return { name: "Home" };

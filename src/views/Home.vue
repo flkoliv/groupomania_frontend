@@ -95,7 +95,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  name: "Login",
+  name: "LoginPage",
   data: function () {
     return {
       mode: "login",
