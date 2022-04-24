@@ -114,8 +114,7 @@ export default {
     }
     const self = this;
     this.$store.dispatch("getUserInfos").then(
-      function (response) {
-        console.log(response);
+      function () {
         self.firstname = self.$store.state.userInfos.firstname;
         self.lastname = self.$store.state.userInfos.lastname;
         self.email = self.$store.state.userInfos.email;

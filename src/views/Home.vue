@@ -164,7 +164,8 @@ export default {
     switchToLogin: function () {
       this.mode = "login";
     },
-    login: function () {// connexion
+    login: function () {
+      // connexion
       const self = this;
       this.$store
         .dispatch("login", {
@@ -172,8 +173,7 @@ export default {
           password: this.password,
         })
         .then(
-          function (response) {
-            console.log(response);
+          function () {
             self.$router.push("/feed");
           },
           function (error) {
@@ -181,7 +181,8 @@ export default {
           }
         );
     },
-    createAccount: function () {// création compte utilisateur
+    createAccount: function () {
+      // création compte utilisateur
       const self = this;
       this.$store
         .dispatch("createAccount", {
@@ -191,8 +192,7 @@ export default {
           password: this.password,
         })
         .then(
-          function (response) {
-            console.log(response);
+          function () {
             self.login();
           },
           function (error) {

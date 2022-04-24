@@ -182,7 +182,6 @@ export default {
 
     deleteComment(id) {
       // supprimer un commentaire
-      console.log(id);
       const self = this;
       this.$store
         .dispatch("deleteComment", {
