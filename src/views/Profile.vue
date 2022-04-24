@@ -28,7 +28,9 @@
   <div class="md:h-32 h-48"></div>
 
   <div class="flex justify-center">
-    <div class="flex flex-col md:w-96 w-full bg-white shadow-xl rounded-xl p-5 m-4">
+    <div
+      class="flex flex-col md:w-96 w-full bg-white shadow-xl rounded-xl p-5 m-4"
+    >
       <div class="flex items-center m-2 justify-between">
         <p>Prénom</p>
         <input
@@ -53,7 +55,9 @@
           v-model="email"
         />
       </div>
-      <div class="flex items-center md:flex md:justify-around md:flex-row flex-col">
+      <div
+        class="flex items-center md:flex md:justify-around md:flex-row flex-col"
+      >
         <button
           :disabled="!validatedFields"
           :class="{ 'cursor-not-allowed': !validatedFields }"
@@ -104,6 +108,7 @@ export default {
   name: "ProfilePage",
   beforeMount: function () {
     if (this.$store.state.user.userId == -1) {
+      // si utilisateur non connecté
       this.$router.push("/");
       return;
     }
@@ -133,6 +138,7 @@ export default {
       user: "userInfos",
     }),
     validatedFields: function () {
+      // vérifier si les champs sont remplis
       if (this.firstname != "" && this.lastname != "" && this.email != "") {
         return true;
       } else {
@@ -142,16 +148,19 @@ export default {
   },
   methods: {
     logout: function () {
+      // deconnexion
       this.$store.commit("logout");
       this.$router.push("/");
     },
     deleteUser: function () {
+      // supression utilisateur
       this.$store.dispatch("deleteUser");
       this.$store.commit("logout");
       this.$router.push("/");
     },
     updateUser: function () {
       this.$store.dispatch("updateUser", {
+        // modification utilisateur
         email: this.email,
         firstname: this.firstname,
         lastname: this.lastname,

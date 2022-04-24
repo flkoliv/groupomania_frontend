@@ -33,6 +33,8 @@ const router = createRouter({
   routes,
 });
 
+
+// navigation guard
 router.beforeEach(async (to) => {
   let user = localStorage.getItem("user");
   if (user == null && to.name !== "Home") {

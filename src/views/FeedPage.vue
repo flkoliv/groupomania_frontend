@@ -179,6 +179,7 @@ export default {
   },
   computed: {
     validatedFields: function () {
+      //vérifier que les champs ne sont pas vides
       if (this.post != "" && this.title != "") {
         return true;
       } else {
@@ -215,7 +216,7 @@ export default {
       this.$store.commit("logout");
       this.$router.push("/");
     },
-    createPost: function () {
+    createPost: function () {// création d'un post
       let formData = new FormData();
       const self = this;
       formData.append("image", this.file);
@@ -241,16 +242,16 @@ export default {
           self.post = "";
           self.imagePreview = "";
           self.file = null;
-          // self.$router.push("/");
         }
       );
     },
 
-    handleFileUpload(event) {
+    handleFileUpload(event) { // récupérer le fichier à télécharger
       this.file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(this.file);
     },
-    showPost(key) {
+
+    showPost(key) {// envoyer sur la page d'un post
       const self = this;
       this.$store.dispatch("getOnePost", key).then(
         function () {
@@ -261,7 +262,7 @@ export default {
         }
       );
     },
-    deletePost(id) {
+    deletePost(id) {// supprimer un post
       const self = this;
       this.$store
         .dispatch("deletePost", {
@@ -276,14 +277,13 @@ export default {
                 posts.splice(i, 1);
               }
             }
-            // self.$router.go();
           },
           function (error) {
             console.log(error);
           }
         );
     },
-    like(id) {
+    like(id) { // ajouter un like
       const self = this;
       this.$store
         .dispatch("likePost", {
@@ -306,7 +306,7 @@ export default {
           }
         );
     },
-    dislike(id) {
+    dislike(id) {// enlever un like
       const self = this;
       this.$store
         .dispatch("dislikePost", {

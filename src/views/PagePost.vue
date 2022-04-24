@@ -27,13 +27,14 @@
   </header>
   <div class="md:h-32 h-48"></div>
 
-  <div class="w-full flex flex-col justify-center items-center">
+  <div class="px-5 w-full flex flex-col justify-center items-center">
     <div
       class="
         flex flex-col
         bg-white
         mt-5
-        w-3/5
+        w-full
+        md:w-3/5
         rounded-xl
         shadow-xl
         overflow-hidden
@@ -46,12 +47,14 @@
     </div>
     <div
       class="
-        flex
+        flex-col
+        md:flex md:flex-row
         items-center
         justify-around
         bg-white
-        mt-5
-        w-3/5
+        m-5
+        md:w-3/5
+        w-full
         rounded-xl
         shadow-xl
         p-5
@@ -59,7 +62,7 @@
     >
       <textarea
         v-model="comment"
-        class="border shadow-inner px-3 py-2"
+        class="md:w-1/3 w-full border shadow-inner px-3 py-2"
         placeholder="Votre texte"
       ></textarea>
       <button
@@ -72,7 +75,8 @@
           rounded-xl
           shadow-lg
           uppercase
-          w-52
+          w-full
+          md:w-1/3
         "
         @click="createComment()"
         :disabled="!validatedFields"
@@ -83,7 +87,7 @@
     </div>
 
     <div
-      class="bg-white mt-5 w-3/5 rounded-xl shadow-xl"
+      class="bg-white mt-5 w-full md:w-3/5 rounded-xl shadow-xl"
       v-for="comment in post.comments"
       :key="comment"
     >
@@ -127,14 +131,10 @@ export default {
       this.$router.push("/");
       return;
     }
-    if (postId == "") {
-      this.$router.push("/");
-    }
     const self = this;
     this.$store.dispatch("getUserInfos");
     this.$store.dispatch("getOnePost", postId).then(
-      function (response) {
-        console.log(response.data);
+      function () {
         self.post = self.$store.state.post;
       },
       function (error) {
@@ -146,12 +146,13 @@ export default {
   },
   methods: {
     logout: function () {
+      // deconnexion
       this.$store.commit("logout");
       this.$router.push("/");
     },
     createComment: function () {
+      //créer un commentaire
       const self = this;
-
       this.$store
         .dispatch("createComment", {
           comment: this.comment,
@@ -160,8 +161,6 @@ export default {
         })
         .then(
           function (response) {
-            console.log(response.data.result.id);
-            console.log(self.$store.state.userInfos);
             self.post.comments.push({
               id: response.data.result.id,
               comment: self.comment,
@@ -182,6 +181,7 @@ export default {
     },
 
     deleteComment(id) {
+      // supprimer un commentaire
       console.log(id);
       const self = this;
       this.$store

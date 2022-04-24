@@ -1,6 +1,6 @@
 <template>
   <div class="flex content-center justify-center items-center h-full">
-    <div class="bg-white shadow-xl max-w-lg w-96 rounded-3xl ">
+    <div class="bg-white shadow-xl max-w-lg w-96 rounded-3xl">
       <img
         class="w-full h-48 object-cover rounded-3xl"
         src="../assets/icon-above-font.svg"
@@ -67,7 +67,17 @@
         <div>
           <button
             @click="login()"
-            class="py-2 px-3 bg-red-500 text-white hover:bg-red-600 rounded-xl mt-5 w-3/5 shadow"
+            class="
+              py-2
+              px-3
+              bg-red-500
+              text-white
+              hover:bg-red-600
+              rounded-xl
+              mt-5
+              w-3/5
+              shadow
+            "
             :disabled="!validatedFields"
             :class="{ 'cursor-not-allowed': !validatedFields }"
             v-if="mode == 'login'"
@@ -77,7 +87,16 @@
           </button>
           <button
             @click="createAccount()"
-            class="py-2 px-3 bg-red-500 text-white hover:bg-red-600 rounded-xl mt-5 w-3/5"
+            class="
+              py-2
+              px-3
+              bg-red-500
+              text-white
+              hover:bg-red-600
+              rounded-xl
+              mt-5
+              w-3/5
+            "
             :disabled="!validatedFields"
             :class="{ 'cursor-not-allowed': !validatedFields }"
             v-else
@@ -107,13 +126,16 @@ export default {
   },
   mounted: function () {
     if (this.$store.state.user.userId != -1) {
+      // si utilisateur déjà connecté
       this.$router.push("/feed");
       return;
     }
   },
   computed: {
     validatedFields: function () {
+      // vérificatiion de la validité des champs
       if (this.mode == "create") {
+        //creation de compte
         if (
           this.email != "" &&
           this.firstname != "" &&
@@ -125,6 +147,7 @@ export default {
           return false;
         }
       } else {
+        // login utilisateur
         if (this.email != "" && this.password != "") {
           return true;
         } else {
@@ -141,7 +164,7 @@ export default {
     switchToLogin: function () {
       this.mode = "login";
     },
-    login: function () {
+    login: function () {// connexion
       const self = this;
       this.$store
         .dispatch("login", {
@@ -158,7 +181,7 @@ export default {
           }
         );
     },
-    createAccount: function () {
+    createAccount: function () {// création compte utilisateur
       const self = this;
       this.$store
         .dispatch("createAccount", {

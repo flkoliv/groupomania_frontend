@@ -1,4 +1,4 @@
-import { createStore, storeKey } from "vuex";
+import { createStore } from "vuex";
 
 const axios = require("axios");
 
@@ -66,6 +66,7 @@ const store = createStore({
   },
   actions: {
     login: ({ commit }, userInfos) => {
+      // connexion utilisateur
       commit("setStatus", "loading");
       return new Promise((resolve, reject) => {
         instance
@@ -83,6 +84,7 @@ const store = createStore({
     },
 
     createAccount: ({ commit }, userInfos) => {
+      // création d'un compte utilisateur
       commit("setStatus", "loading");
       return new Promise((resolve, reject) => {
         instance
@@ -98,6 +100,7 @@ const store = createStore({
       });
     },
     getUserInfos: ({ commit }) => {
+      // récupération des infos utilisateur
       return new Promise((resolve, reject) => {
         instance
           .get("users/me")
@@ -112,6 +115,7 @@ const store = createStore({
       });
     },
     deleteUser: ({ commit }) => {
+      // supprimer utilisateur
       instance
         .delete("users/me")
         .then(function (response) {
@@ -122,16 +126,17 @@ const store = createStore({
         });
     },
     updateUser: ({ commit }, data) => {
+      // mise à jour utilisateur
+      commit;
       instance
         .put("users/me", data)
-        .then(function () {
-          
-        })
+        .then(function () {})
         .catch(function (error) {
           console.log(error);
         });
     },
     createPost: ({ commit }, data) => {
+      // création d'un post
       return new Promise((resolve, reject) => {
         instance
           .post("posts", data)
@@ -146,6 +151,7 @@ const store = createStore({
       });
     },
     getAllPosts: ({ commit }) => {
+      // récupération de tous les posts
       return new Promise((resolve, reject) => {
         instance
           .get("posts", { params: { userId: 60 } })
@@ -161,6 +167,7 @@ const store = createStore({
     },
 
     getOnePost: ({ commit }, key) => {
+      // récupération d'un post en fonction de son id
       return new Promise((resolve, reject) => {
         instance
           .get("posts/" + key)
@@ -176,6 +183,7 @@ const store = createStore({
     },
 
     createComment: ({ commit }, data) => {
+      // créer un commentaire
       return new Promise((resolve, reject) => {
         instance
           .post("posts/comment", data)
@@ -191,6 +199,8 @@ const store = createStore({
     },
 
     deleteComment: ({ commit }, data) => {
+      // supprimer un commentaire
+      commit;
       return new Promise((resolve, reject) => {
         instance
           .delete("posts/comment", { data: data })
@@ -204,6 +214,8 @@ const store = createStore({
     },
 
     deletePost: ({ commit }, data) => {
+      // supprimer un post
+      commit;
       return new Promise((resolve, reject) => {
         instance
           .delete("posts", { data: data })
@@ -217,6 +229,7 @@ const store = createStore({
     },
 
     likePost: ({ commit }, data) => {
+      // ajouter un like
       return new Promise((resolve, reject) => {
         instance
           .post("posts/like", data)
@@ -231,17 +244,19 @@ const store = createStore({
       });
     },
     dislikePost: ({ commit }, data) => {
-        return new Promise((resolve, reject) => {
-          instance
-            .delete("posts/like", { data: data })
-            .then(function (response) {
-              resolve(response);
-            })
-            .catch(function (error) {
-              reject(error);
-            });
-        });
-      },
+      // enlever un like
+      commit;
+      return new Promise((resolve, reject) => {
+        instance
+          .delete("posts/like", { data: data })
+          .then(function (response) {
+            resolve(response);
+          })
+          .catch(function (error) {
+            reject(error);
+          });
+      });
+    },
   },
 });
 
