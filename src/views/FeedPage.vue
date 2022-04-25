@@ -1,33 +1,6 @@
 /* eslint-disable vue/multi-word-component-names */
 <template>
-  <header
-    class="
-      fixed
-      flex flex-col
-      md:flex-row
-      content-center
-      justify-between
-      items-center
-      bg-white
-      w-full
-      shadow-xl
-    "
-  >
-    <img
-      src="../assets/icon-left-font.png"
-      alt=""
-      class="w-80 h-24 object-cover"
-    />
-    <h1 class="text-5xl font-bold">Feed</h1>
-    <nav class="md:mr-10">
-      <router-link to="/feed">Feed</router-link> |
-      <router-link to="/profile">Profile</router-link> |
-      <router-link to="/" @click="logout()">Logout</router-link>
-    </nav>
-    <router-view />
-  </header>
-
-  <div class="md:h-32 h-48"></div>
+  <HeaderView title="Feed"></HeaderView>
 
   <div class="flex justify-center content-between">
     <div class="md:w-3/5 w-full mx-5 bg-white rounded-xl shadow-xl my-2 p-5">
@@ -164,8 +137,12 @@
 </template>
 
 <script>
+import HeaderView from "@/components/HeaderView.vue";
 export default {
   name: "FeedPage",
+  components: {
+    HeaderView,
+  },
   data() {
     return {
       file: "",
@@ -212,11 +189,8 @@ export default {
     this.userId = this.$store.state.user.userId;
   },
   methods: {
-    logout: function () {
-      this.$store.commit("logout");
-      this.$router.push("/");
-    },
-    createPost: function () {// création d'un post
+    createPost: function () {
+      // création d'un post
       let formData = new FormData();
       const self = this;
       formData.append("image", this.file);
@@ -230,7 +204,7 @@ export default {
           response.data.result.firstname =
             self.$store.state.userInfos.firstname;
           response.data.result.lastname = self.$store.state.userInfos.lastname;
-          self.posts.unshift(response.data.result);
+          self.posts.unshift(response.data.result); // ajouter les données au debut de posts
           self.title = "";
           self.post = "";
           self.imagePreview = "";
@@ -246,12 +220,14 @@ export default {
       );
     },
 
-    handleFileUpload(event) { // récupérer le fichier à télécharger
+    handleFileUpload(event) {
+      // récupérer le fichier à télécharger
       this.file = event.target.files[0];
       this.imagePreview = URL.createObjectURL(this.file);
     },
 
-    showPost(key) {// envoyer sur la page d'un post
+    showPost(key) {
+      // envoyer sur la page d'un post
       const self = this;
       this.$store.dispatch("getOnePost", key).then(
         function () {
@@ -262,7 +238,8 @@ export default {
         }
       );
     },
-    deletePost(id) {// supprimer un post
+    deletePost(id) {
+      // supprimer un post
       const self = this;
       this.$store
         .dispatch("deletePost", {
@@ -283,7 +260,8 @@ export default {
           }
         );
     },
-    like(id) { // ajouter un like
+    like(id) {
+      // ajouter un like
       const self = this;
       this.$store
         .dispatch("likePost", {
@@ -306,7 +284,8 @@ export default {
           }
         );
     },
-    dislike(id) {// enlever un like
+    dislike(id) {
+      // enlever un like
       const self = this;
       this.$store
         .dispatch("dislikePost", {

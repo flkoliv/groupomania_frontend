@@ -1,31 +1,5 @@
 <template>
-  <header
-    class="
-      fixed
-      flex flex-col
-      md:flex-row
-      content-center
-      justify-between
-      items-center
-      bg-white
-      w-full
-      shadow-xl
-    "
-  >
-    <img
-      src="../assets/icon-left-font.png"
-      alt=""
-      class="w-80 h-24 object-cover"
-    />
-    <h1 class="text-5xl font-bold">Post</h1>
-    <nav class="md:mr-10">
-      <router-link to="/feed">Feed</router-link> |
-      <router-link to="/profile">Profile</router-link> |
-      <router-link to="/" @click="logout()">Logout</router-link>
-    </nav>
-    <router-view />
-  </header>
-  <div class="md:h-32 h-48"></div>
+  <HeaderView title="Post"></HeaderView>
 
   <div class="px-5 w-full flex flex-col justify-center items-center">
     <div
@@ -103,8 +77,12 @@
 </template>
 
 <script>
+import HeaderView from "@/components/HeaderView.vue";
 export default {
   name: "PagePost",
+  components: {
+    HeaderView,
+  },
   props: ["postId"],
   data() {
     return {
@@ -145,11 +123,6 @@ export default {
     this.userId = this.$store.state.user.userId;
   },
   methods: {
-    logout: function () {
-      // deconnexion
-      this.$store.commit("logout");
-      this.$router.push("/");
-    },
     createComment: function () {
       //créer un commentaire
       const self = this;

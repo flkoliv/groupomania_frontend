@@ -1,32 +1,5 @@
 <template>
-  <header
-    class="
-      fixed
-      flex flex-col
-      md:flex-row
-      content-center
-      justify-between
-      items-center
-      bg-white
-      w-full
-      shadow-xl
-    "
-  >
-    <img
-      src="../assets/icon-left-font.png"
-      alt=""
-      class="w-80 h-24 object-cover"
-    />
-    <h1 class="text-5xl font-bold">Profile</h1>
-    <nav class="md:mr-10">
-      <router-link to="/feed">Feed</router-link> |
-      <router-link to="/profile">Profile</router-link> |
-      <router-link to="/" @click="logout()">Logout</router-link>
-    </nav>
-    <router-view />
-  </header>
-  <div class="md:h-32 h-48"></div>
-
+  <HeaderView title="Profile"></HeaderView>
   <div class="flex justify-center">
     <div
       class="flex flex-col md:w-96 w-full bg-white shadow-xl rounded-xl p-5 m-4"
@@ -103,9 +76,12 @@
 
 <script>
 import { mapState } from "vuex";
-
+import HeaderView from "@/components/HeaderView.vue";
 export default {
   name: "ProfilePage",
+  components: {
+    HeaderView,
+  },
   beforeMount: function () {
     if (this.$store.state.user.userId == -1) {
       // si utilisateur non connecté
@@ -146,11 +122,6 @@ export default {
     },
   },
   methods: {
-    logout: function () {
-      // deconnexion
-      this.$store.commit("logout");
-      this.$router.push("/");
-    },
     deleteUser: function () {
       // supression utilisateur
       this.$store.dispatch("deleteUser");
